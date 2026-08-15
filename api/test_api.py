@@ -37,7 +37,7 @@ class Clan():
 
     def get_info(self):
         encoded_tag = self.clanTag.replace("#", "%23")
-        url = f"https://api.clashofclans.com/v1/clans/{encoded_tag}"
+        url = f"https://api.clashofclans.com/v1/clans/{encoded_tag}/warlog"
 
         headers = {
             "Accept": "application/json",
@@ -49,7 +49,7 @@ class Clan():
 
         return response.json()
     
-    def queryClan(self):
+    def queryClan(self, fields):
         self.clanInfo = self.get_info()
 
         return {
@@ -58,35 +58,27 @@ class Clan():
             if field in self.clanInfo
         }
 
-    def queryClanLeagueGroup(self):
-        self.leagueInfo = self.get
-    
-    def getMemberList(self):
-        self.members = self.get_info()
-        
-        #for member in self.members['memberList']:
-        #    print(member['tag'])
-
     def createMemberList(self):
         self.memberList = []
-        self.members = self.get_info()
+        print(self.queryClan('memberList'))
+        self.members = self.queryClan(['memberList'])
 
-        for memberTag in self.members['memberList']:
-            self.memberList.append(memberTag['tag'])
-        
+        for member in self.members:
+            self.memberList.append(member['tag'])
+
         return self.memberList
 
 # Instantiate class
 #API_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjhjMzFhYTEwLTRkYTYtNGJmMi05NjkyLTViODM4ODg3YmNhYyIsImlhdCI6MTc4NjQxODIyMiwic3ViIjoiZGV2ZWxvcGVyL2ZlMzA3MDZmLWJkNjgtNGFjOC04ZGQ1LTFkMDVjZTBhNTFmMyIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE4Ny4xMy4xNDMuMjA0Il0sInR5cGUiOiJjbGllbnQifV19._tOYShTW-u0DO58wfHpqPFKMjzqV6xkwZ1mwse4lfd2qmH8LOKLKZb21Q78xOuMTZ0CiVX6iPi3x0xeph1vOdQ"
 '''
-with open("coc_clan_data.csv", "w", newline="") as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames=fields)
+with open("coc_clan_data.csv", "a", newline="") as clanscv:
+    writer = csv.DictWriter(clanscv, fieldnames=clanFields)
     writer.writeheader()
 
-    for tag in clan.createMemberList():
-        player = Player(API_TOKEN, tag)
+    for tag in clanTags:
+        clan = Clan(API_TOKEN, tag)
 
-        data = player.queryPlayer(fields)
+        data = clan.queryClan(clanFields)
 
         writer.writerow(data)
 '''
