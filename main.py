@@ -42,4 +42,4 @@ def getPlayerData():
         return player.get_info()
 
 with open("data.json", "w") as f:
-    print(getClanData(), file=f)
+    json.dump(getClanData(), f)
