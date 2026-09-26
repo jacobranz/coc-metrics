@@ -7,7 +7,7 @@ class playerData():
         player = np.array(data)
         return player
 
-class war():
+class War():
     def __init__(self, data):
         self.data = data
 
